@@ -181,7 +181,7 @@ Here's what you will need to submit:
   - Show the url to prove you are on your deployed website. Then show all the requirement features you fulfilled in your mp.
   - If you were unable to deploy your website, you can demo your mp locally for some point deduction (hard capped at 80%)
     - Just make sure you do `git status` and `git log` first so we can see your last edits.
-5. Fill out and submit the form [Submission Form](https://forms.gle/ya5CB3VoSaZceWDQA)
+5. Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
 
 ## Large Language Model Usage Policy
 
