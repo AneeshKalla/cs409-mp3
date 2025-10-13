@@ -117,12 +117,18 @@ Here is the Task Schema:
 
 ## 2. Getting Started
 1. Clone the repository:
-`git clone https://gitlab.com/uiuc-web-programming/mp3.git mp3`, then `cd mp3`
+`git clone git@github.com:cs409-fa25/mp3.git`, then `cd mp3`
 2. Install dependencies:
 `npm install`
 3. Start the dev server:
-`npm start` or 
-`nodemon --exec node server.js` to automatically restart the server on save.
+`npm start`
+4. [Create a public repository on GitHub.](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) Make sure "Initialize this repository with a README" is **not** checked.
+5. Change the remote url for the mp1 directory to the url of the new private repository you created.
+```
+git remote rename origin old-origin
+git remote add origin git@github.com:<your-github-username>/mp3.git
+# run `git remote -v` to check your origin 
+```
 
 
 ## 3. Tips
@@ -161,15 +167,24 @@ Contains sample task descriptions. Edit if you want, I don't care.
 2. It is not permitted to copy/paste code that is not your own. You are, however, free to look at different code sources for inspiration and clarity. All sources (code as well as reading material) that you reference to complete this assignment must be declared in the submission.
 3. If you think something you’re doing might not be acceptable, please ask on Piazza.
 
+### Deploy your code
+In order for us to view and grade your MP, you will be deploying your webpage with GitHub's pipelines. This should happen automatically after pushing to your repository, through Github Actions deployment pipeline.
+
+You will need to do some additional work to properly deploy the website. There are a few settings you will need to change in your GitHub repository.
+1. Set GitHub Pages Deployment Source to Github Actions
+   - In your Github repo, go to Settings > Pages > Build and Deployment > Source > Select "GitHub Actions"
+`.github/workflows/static.yml` file automatically makes a GitHub CI pipeline run to build and deploy your code as a website. After the pipeline finishes, your site should be live at `https://<your-github-username>.github.io/mp3`.
 
 ## Submission Details
 Here's what you will need to submit:
-1. Create a private repository on GitLab. Make sure "Initialize this repository with a README" is not checked.
-2. Change the remote url for the mp3 directory to the url of the new private repository you created.
-```
-git remote rename origin old-origin
-git remote add origin git@gitlab.com:<your-gitlab-username>/mp3.git
-```
-3. Commit and push your local changes to this new repository.
-4. Invite `uiucwp` as a collaborator. This should be as a **reporter**, not as a *guest*, otherwise we can't see your code.
-5. Fill out and submit the form [Submission Form](https://forms.gle/iKZ8TSfjgDkxXkmV9)
+1. Make a video (3 minutes max) demo-ing your deployed website and upload it to Google Drive. Share it with `uiuc.web.programming@gmail.com` and put the share link in the google form.
+  - Show the url to prove you are on your deployed website. Then show all the requirement features you fulfilled in your mp.
+  - If you were unable to deploy your website, you can demo your mp locally for some point deduction (hard capped at 80%)
+    - Just make sure you do `git status` and `git log` first so we can see your last edits.
+5. Fill out and submit the form [Submission Form](https://forms.gle/ya5CB3VoSaZceWDQA)
+
+## Large Language Model Usage Policy
+
+We acknowledge the transformative potential of Large Language Models (LLM) in generating code; however, we are still in the nascent stages of understanding how to embed LLMs in developer workflows to write code more efficiently while maintaining quality. Therefore, we will not be teaching students directly how to use LLMs to develop web applications.
+
+As part of this class, we *do* encourage students to experiment with LLM services such as OpenAI's ChatGPT to generate source code for MPs. If LLMs are used to generate code for an MP, students *must* (1) submit their chatlogs along with their source code, and (2) answer survey questions related to their experience using LLMs in the grading form. Failure to do this will be a violation of the academic integrity policy of this course.
