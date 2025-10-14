@@ -133,7 +133,8 @@ git remote add origin git@github.com:<your-github-username>/mp3.git
 
 ## 3. Tips
   - Start early!
-  - Please DO NOT delete the `.gitignore file` from the project, you will lose 1% point 
+  - Please DO NOT delete the `.gitignore file` from the project, you will lose 1% point
+  - DO NOT push your .env file to your repository (remember to uncomment .env in .gitignore), or you will lose 1% point
   - Check out [Postman](https://www.getpostman.com/postman) to your API
   - Free MongoDB server - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
   - You don't need to host anywhere, we will check out your code locally, be sure to run your MongoDB server all the time
@@ -168,20 +169,13 @@ Contains sample task descriptions. Edit if you want, I don't care.
 3. If you think something you’re doing might not be acceptable, please ask on Piazza.
 
 ### Deploy your code
-In order for us to view and grade your MP, you will be deploying your webpage with GitHub's pipelines. This should happen automatically after pushing to your repository, through Github Actions deployment pipeline.
-
-You will need to do some additional work to properly deploy the website. There are a few settings you will need to change in your GitHub repository.
-1. Set GitHub Pages Deployment Source to Github Actions
-   - In your Github repo, go to Settings > Pages > Build and Deployment > Source > Select "GitHub Actions"
-`.github/workflows/static.yml` file automatically makes a GitHub CI pipeline run to build and deploy your code as a website. After the pipeline finishes, your site should be live at `https://<your-github-username>.github.io/mp3`.
+In order for us to view and grade your MP, you will be deploying your APIs on Render. Refer to DevLab videos and [slides](https://drive.google.com/file/d/1PGC0QUjd8cxOZyS4aFkj45g7QYOF5dWD/view?usp=sharing) for a demo including setting up MongoDB, connecting express.js and deploying on render.
 
 ## Submission Details
 Here's what you will need to submit:
-1. Make a video (3 minutes max) demo-ing your deployed website and upload it to Google Drive. Share it with `uiuc.web.programming@gmail.com` and put the share link in the google form.
-  - Show the url to prove you are on your deployed website. Then show all the requirement features you fulfilled in your mp.
-  - If you were unable to deploy your website, you can demo your mp locally for some point deduction (hard capped at 80%)
-    - Just make sure you do `git status` and `git log` first so we can see your last edits.
-5. Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
+1. Make a video (3 minutes max) demo-ing your deployed APIs and upload it to Google Drive. Share it with `uiuc.web.programming@gmail.com` and put the share link in the google form.
+  - Show the url to prove you are on your deployed APIs. Then show all the requirement features you fulfilled in your mp.
+2. Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
 
 ## Large Language Model Usage Policy
 
