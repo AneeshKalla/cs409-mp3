@@ -2,9 +2,9 @@
 ### Due: November 19th, 2024, 11:59PM CT
 
 ## Table of Contents
-1. [Assignment](#assignment)
-2. [Getting Started](#getting-started)
-3. [Tips](#tips)
+1. [Assignment](#1-assignment)
+2. [Getting Started](#2-getting-started)
+3. [Tips](#3-tips)
 4. [Rules](#rules)
 5. [Submission Details](#submission-details)
 
