@@ -16,7 +16,7 @@
 
 #### Task
 
- Implement an API with the following end-points (they would be preceded by something like http://localhost:4000/api/). Your implementation should use Node, Express and Mongoose.
+ Implement an API with the following end-points (they would be preceded by something like http://localhost:3000/api/). Your implementation should use Node, Express and Mongoose.
 
 
 | Endpoints| Actions | Intended Outcome                                    |
@@ -133,12 +133,14 @@ git remote add origin git@github.com:<your-github-username>/mp3.git
 
 ## 3. Tips
   - Start early!
-  - Please DO NOT delete the `.gitignore file` from the project, you will lose 1% point
-  - DO NOT push your .env file to your repository (remember to uncomment .env in .gitignore), or you will lose 1% point
+  - Please DO NOT delete the `.gitignore` file from the project, you will lose 1% point
+  - DO NOT push your updated .env file to your repository (remember to uncomment .env in .gitignore), or you will lose 1% point
+  - We will check if you uncommented .env
   - Check out [Postman](https://www.getpostman.com/postman) to your API
   - Free MongoDB server - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-  - You don't need to host anywhere, we will check out your code locally, be sure to run your MongoDB server all the time
   - The example queries above will cover 70% grade, and another 30% of corner test cases will not be released.
+  - In order for us to view and grade your MP, you will be deploying your APIs on Render. Refer to DevLab videos and [slides](https://drive.google.com/file/d/1PGC0QUjd8cxOZyS4aFkj45g7QYOF5dWD/view?usp=sharing) for a demo including setting up MongoDB, connecting Express.js and deploying on Render.
+
 
 For answers to some popular questions see [FAQ.md](./FAQ.md).
 
@@ -168,14 +170,8 @@ Contains sample task descriptions. Edit if you want, I don't care.
 2. It is not permitted to copy/paste code that is not your own. You are, however, free to look at different code sources for inspiration and clarity. All sources (code as well as reading material) that you reference to complete this assignment must be declared in the submission.
 3. If you think something you’re doing might not be acceptable, please ask on Piazza.
 
-### Deploy your code
-In order for us to view and grade your MP, you will be deploying your APIs on Render. Refer to DevLab videos and [slides](https://drive.google.com/file/d/1PGC0QUjd8cxOZyS4aFkj45g7QYOF5dWD/view?usp=sharing) for a demo including setting up MongoDB, connecting express.js and deploying on render.
-
 ## Submission Details
-Here's what you will need to submit:
-1. Make a video (3 minutes max) demo-ing your deployed APIs and upload it to Google Drive. Share it with `uiuc.web.programming@gmail.com` and put the share link in the google form.
-  - Show the url to prove you are on your deployed APIs. Then show all the requirement features you fulfilled in your mp.
-2. Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
+Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
 
 ## Large Language Model Usage Policy
 
