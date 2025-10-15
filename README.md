@@ -116,19 +116,13 @@ Here is the Task Schema:
     - DELETE a User should unassign the user's pending tasks
 
 ## 2. Getting Started
-1. Clone the repository:
-`git clone git@github.com:cs409-fa25/mp3.git`, then `cd mp3`
-2. Install dependencies:
+1. Create a public repository under your own account on GitHub by clicking the `use template` button on the top right.
+2. Clone the repository you created to your local machine.
+3. Install dependencies:
 `npm install`
-3. Start the dev server:
+4. Start the dev server:
 `npm start`
-4. [Create a public repository on GitHub.](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) Make sure "Initialize this repository with a README" is **not** checked.
-5. Change the remote url for the mp1 directory to the url of the new private repository you created.
-```
-git remote rename origin old-origin
-git remote add origin git@github.com:<your-github-username>/mp3.git
-# run `git remote -v` to check your origin 
-```
+
 
 
 ## 3. Tips
