@@ -116,7 +116,7 @@ Here is the Task Schema:
     - DELETE a User should unassign the user's pending tasks
 
 ## 2. Getting Started
-1. Create a public repository under your own account on GitHub by clicking the `use template` button on the top right.
+1. Create a public repository under your own account on GitHub by clicking the `use this template` button on the top right.
 2. Clone the repository you created to your local machine.
 3. Install dependencies:
 `npm install`
