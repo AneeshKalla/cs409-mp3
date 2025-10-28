@@ -1,5 +1,5 @@
 # MP #3: APIed Piper
-### Due: November 19th, 2024, 11:59PM CT
+### Due: November 4th, 2025, 11:59PM CT
 
 ## Table of Contents
 1. [Assignment](#1-assignment)
