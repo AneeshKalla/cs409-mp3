@@ -1,5 +1,5 @@
 # MP #3: APIed Piper
-### Due: November 4th, 2025, 11:59PM CT
+### Due: Tuesday, Nov 3, 2026, 11:59PM CT
 
 ## Table of Contents
 1. [Assignment](#1-assignment)
@@ -165,7 +165,7 @@ Contains sample task descriptions. Edit if you want, I don't care.
 3. If you think something you’re doing might not be acceptable, please ask on Piazza.
 
 ## Submission Details
-Fill out and submit the form [Submission Form](https://forms.gle/m6F1Gg5bcg2xn1HJA)
+Fill out and submit the form [Submission Form](https://forms.gle/4V1v2VWU78XwM3H57)
 
 ## Large Language Model Usage Policy
 
