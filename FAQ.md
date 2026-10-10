@@ -34,6 +34,39 @@ Here are some answers to some popular questions from previous years.
 
     __Answer__: If you are asking how to test these endpoints and read through the data you send in and receive, I would recommend using Postman! It provides a clean interface for making HTTP requests. Otherwise, look up the documentation for curl and have fun :D
 
+* How do I run the autograder?
+
+    > Is there a way to see my score before the deadline?
+
+    __Answer__: Yes. Deploy your API, set `API_URL` in `submit.js`, and run `npm run submit`. See "Self-check with `submit.js`" in the README. The autograder cannot reach `localhost`, so you must use your deployed URL.
+
+* How do I read the autograder's feedback?
+
+    > It says "FAIL" for an item but my Postman requests work.
+
+    __Answer__: Each item that did not receive full credit lists what was wrong, e.g. a wrong status code, a missing field, or a broken two-way reference. We don't release the exact requests the autograder sends, so also try variations in Postman (invalid input, missing fields, combining query parameters, ids that do not exist). Items marked "Skipped" depend on an earlier item (e.g. creating a user) that failed, so fix that one first.
+
+* `submit.js` times out or says "no response from server"
+
+    __Answer__: A free Render service sleeps when idle and can take a minute or more to wake up. Open your API URL in a browser, wait for a response, and run again. Also check that your API URL is the base URL of your deployment (the autograder adds `/api` itself), that it is public, and that your MongoDB Atlas cluster allows access from anywhere.
+
+* "Too many submissions"
+
+    > I got a rate limit error from the autograder.
+
+    __Answer__: The autograder allows a limited number of runs per student in a time window. Wait a few minutes, and fix multiple issues between runs.
+
+* Is the `submit.js` score my final grade?
+
+    __Answer__: It is the output of the same autograder used for grading, but running it is not a submission. Submit through the form in the README, and make sure your deployment stays up.
+
+
+### Node.js and packages
+
+1. Which Node.js version should I use? I get errors on Node 25.
+
+    __Answer__: Use the current **LTS** release, Node 24 (`nvm install --lts && nvm use --lts`). The starter now uses current Mongoose (v9) and Express (v5), which work on Node 24 LTS; do not use odd-numbered, non-LTS releases such as Node 25. The old starter pinned Mongoose 5, which does not work on newer Node versions; if your `package.json` still says `"mongoose": "^5..."`, update it (or re-copy it from the template) and run `npm install`. With Mongoose 9 you do not need options like `useNewUrlParser`/`useUnifiedTopology`, just `mongoose.connect(process.env.MONGODB_URI)`, and callbacks are no longer supported (use `async`/`await` or promises).
+
 ### MongoDB Questions
 
 1. MP3 Collection Constraints
@@ -46,7 +79,7 @@ Here are some answers to some popular questions from previous years.
 
     > For the user and task schema, can we use the mongoose timestamps "createdAt" for the "dateCreated" field, or we have to manually create "dateCreated" filed and set accordingly.
 
-    __Answer__: Yes, you can use Mongoose's built-in `timestamps`.
+    __Answer__: Yes, you can use Mongoose's built-in `timestamps`, e.g. `timestamps: { createdAt: 'dateCreated', updatedAt: false }` so the field is named `dateCreated`. Whichever way you do it, `dateCreated` must be set by the server when the document is created, must be ignored if a client sends it, and must not change on `PUT`.
 
 3. Deprecated URL Warning
     ```
@@ -68,7 +101,7 @@ Here are some answers to some popular questions from previous years.
 1. .env
     > In the .env file, other than the MONGODB_URI key, do we need to update the TOKEN key or we just leave it as what it is?
 
-    __Answer__: For the `.env` file, regarding the TOKEN key, you can leave it as it is. However, ensure that you have the correct value for MONGODB_URI to connect to your MongoDB instance. Be sure to add ".env" to your .gitignore to prevent it from being committed to version control/GitHub.
+    __Answer__: The repository contains `.env.example`, not `.env`. Copy it (`cp .env.example .env`) and fill in `MONGODB_URI` with your own connection string; leave `TOKEN` as it is. `.env` is already in `.gitignore`, so it will not be committed. If you did commit a `.env` file, run `git rm --cached .env`, commit and push, and change your database password (see the README Tips).
 
 2. Using external packages
     
@@ -78,51 +111,71 @@ Here are some answers to some popular questions from previous years.
 
 3. Conflicting Inputs MP3
 
-    > Do we have to check if there is a conflict of assignment between tasks and users. For example, a task and user are linked to each other, meaning that task’s assignedUser attribute has the user’s id and the user has the task id in its pending task. A new user is added with a pending task that has that task id(meaning that there is a conflict). If we have to check it, what is the appropriate response?
+    > Do we have to check if there is a conflict of assignment between tasks and users? For example, a task is assigned to user A (and is in A's pendingTasks), and then user B is updated (PUT) with that task's id in its pendingTasks. What should happen?
 
-    __Answer__: Yes, it means two different users are being assigned the same task, which could lead to inconsistency. You should not allow the assignment to take place. "The task is already assigned to another user" with the appropriate HTTP status code could be a response.
+    __Answer__: This is not an error. `PUT` replaces the user, so the task *moves*: it is removed from A's `pendingTasks` and assigned to B (`assignedUser` = B's `_id`, `assignedUserName` = B's name). The same applies to `POST /users` with `pendingTasks`. A task is assigned to at most one user at any time. (Errors are only for invalid input: malformed ids `400`, non-existent tasks `404`, completed tasks `400`.) See the README section "Two-way references".
 
 4. 404 Clarification
 
     > users/:id GET Respond with details of specified user or 404 error \
     > \
-    > When http://localhost:4000/api/users?where={"_id";: "55099652e5993a350458b7b7"} can't find a user, which do we give: 404 error message or {"message":"OK","data":[]} 
+    > When `http://localhost:4000/api/users?where={"_id": "55099652e5993a350458b7b7"}` can't find a user, which do we give: 404 error message or `{"message":"OK","data":[]}`?
 
-    __Answer__: Personally, I would do the latter, but for this assignment I think the 404 error is required.
+    __Answer__: These are two different endpoints with two different rules:
+    * `GET /api/users/:id` (and `/api/tasks/:id`) looks up *one* resource. If it does not exist, or the id is not a valid id at all, respond `404`.
+    * `GET /api/users?where=...` (and `/api/tasks?where=...`) returns a *list*. No match is not an error: respond `200` with `{"message":"OK","data":[]}` (or `0` with `count=true`). Do not return `404` here.
+
+    (Earlier versions of this FAQ said a `where` with no match should return 404. That is no longer the rule.)
 
 5. Cascade Updates
 
-    > Just for clarification when we are implementing PUT for Task or User do we have to make sure the other one gets updated as well. For example, if the User is updated with pendingTasks, does the Task have to update with the assigned userID and userName and the other way around?
+    > When implementing PUT for Task or User, do we have to make sure the other one gets updated as well?
 
-    __Answer__: Yes, when implementing the PUT method for either Task or User, you need to ensure the two-way reference between Task and User is maintained.
-    
-    If you PUT a Task with an assignedUser and assignedUserName:
-    * The corresponding User's pendingTasks should be updated to include this task.
-    
-    If you PUT a User with pendingTasks:
-    * The tasks listed in pendingTasks should update their assignedUser and assignedUserName fields to reference this user.
+    __Answer__: Yes. The complete rules are in the README section "Two-way references"; the cases people most often ask about are listed here. Let `old` be a user's previous `pendingTasks` and `new` the list in the `PUT /users/:id` body:
 
-    > I'm seeing a lot of conflicting information, and I wanted clarification on how to deal with the two-way reference with PUTS and DELETES. \
-    >
-    > SCENARIO: PUT request to /api/task/:id but the Task is already assigned to a User. \
-    > \
-    > Case 1: Should we AWLAYS overwrite the Task with the request body information (RESTFUL PUT), and update the necessary User and/or Task appropriately to keep the two-way reference? (e.g. remove Task from User.pendingTasks etc.) \
-    > \
-    > Case 2: Should we send an error status and not update anything, keeping the two-way reference (this may make it so that some Tasks can never be updated....) \
-    > \
-    > How should PUT /api/users/:id also behave in this scenario. Should we always overwite the User with the new request body information, and update other Users and Tasks accordingly, or should we just send an error status if there is conflicting information (request body information pendingTasks has a Task that's already assigned to someone, don't update anything with the current User and send an error status) \
-    > \
-    > Lastly, what should happen with /api/delete requests for both Users and Task? I am assuming with DELETE requests we should ALWAYS delete successfully (go through with the operation) unless the ID is not found (then 404), and update necessary Users and Tasks appropiately (e.g. remove user from Task if user is deleted). Or, should we not delete when there is conflicting information and send an error status...
+    | Case | Result |
+    |------|--------|
+    | tasks in `old` but not in `new` | `assignedUser = ""`, `assignedUserName = "unassigned"` |
+    | tasks in `new` but not in `old` | `assignedUser = <user _id>`, `assignedUserName = <user name>` |
+    | a task in `new` that belongs to another user | removed from the other user's `pendingTasks`, then assigned to this user |
+    | the user's `name` changed | `assignedUserName` is updated on **all** the user's tasks (completed ones included) |
+    | `PUT /tasks/:id` assigns an uncompleted task to a user | the task id is added to that user's `pendingTasks` |
+    | `PUT /tasks/:id` changes `assignedUser` | the task id is removed from the previous user's `pendingTasks` |
+    | `PUT /tasks/:id` with `completed: true` | removed from the user's `pendingTasks`, the task stays assigned to that user |
+    | `PUT /tasks/:id` with `completed: false` and an assigned user | the task id is (re)added to that user's `pendingTasks` |
+    | `PUT /tasks/:id` with `assignedUser: ""` | unassigned, and removed from the previous user's `pendingTasks` |
+    | `DELETE /tasks/:id` | removed from the assigned user's `pendingTasks` |
+    | `DELETE /users/:id` | all the user's tasks (completed too) become `""` / `"unassigned"` |
 
-    __Answer__: If a PUT request changes the assigned user, you should make the appropriate modifications to remain consistent and maintain two-way reference. 
-    
-    A DELETE request should always be carried out on a legitimate ID, and assigned tasks / assigned users should be removed or set to null accordingly to maintain consistency and two-way reference.
+    Any approach that gives these results is fine, you are free to implement it more cleverly. Note that if your endpoint allows changing `pendingTasks`, it must also update the tasks that were added/removed, and if it allows changing a task's `assignedUser`, it must update the users' `pendingTasks`.
 
-    ```
-    If a new task is created or an existing task is updated, and if the completed field is set to true, is it considered as a pending task? Do we need to add this task to the assignedUser's pendingTasks list?
-    ```
+    > SCENARIO: PUT request to /api/tasks/:id but the Task is already assigned to a User. Should we always overwrite, or send an error?
 
-    __Answer__: No, if the completed field is set to true for a task, it should not be considered as a pending task. Therefore, when creating or updating a task with the completed field set to true, you should not add this task to the assignedUser's pendingTasks list.
+    __Answer__: Always overwrite (`PUT` replaces the resource) and update the other documents so everything stays consistent. Errors are only for invalid input, see the next question. `DELETE` on an existing id always succeeds and cleans up references.
+
+6. `PUT /users/:id`: what should the status codes be?
+
+    __Answer__: In this order:
+
+    | # | Situation | Response |
+    |---|-----------|----------|
+    | 1 | `:id` is not an existing user (including a malformed id) | `404` |
+    | 2 | `name` or `email` missing / wrong type; a `pendingTasks` entry is not a valid id; `pendingTasks` is not a list | `400` |
+    | 3 | `email` is used by *another* user (keeping the user's own email is fine) | `400` |
+    | 4 | an id in `pendingTasks` is valid but no such task exists | `404` |
+    | 5 | a task in `pendingTasks` is completed | `400` |
+    | 6 | unexpected server/database error | `500` |
+    | 7 | success | `200`, with the updated user (the new `pendingTasks`) in `data` |
+
+    On success: `dateCreated` is unchanged, the tasks are updated as described above, and nothing is changed for failed requests. The same ideas apply to `PUT /tasks/:id` (`404` for an unknown task id, `400` for missing `name`/`deadline`, a malformed `assignedUser`, or an `assignedUserName` that does not match `assignedUser`, `404` for a well-formed `assignedUser` that does not exist).
+
+    > Does the user's `pendingTasks` need to be a task that is not completed? If a task is created or updated with `completed` set to true, should it be added to the assigned user's `pendingTasks`?
+
+    __Answer__: No. Completed tasks are never in `pendingTasks`, and a request that puts a completed task there gets `400`.
+
+    > Can I change `assignedUser` (or `assignedUserName`) of a **completed** task with `PUT`?
+
+    __Answer__: Yes, it is allowed. `PUT` replaces the whole task and the new assignment must still be valid (existing user, matching `assignedUserName`). Because the task is completed it is not added to anyone's `pendingTasks`. A completed task keeps its `assignedUser` (that is how we know who completed it), so e.g. `PUT` with `completed: true` and the same `assignedUser` must succeed and remove the task from the user's `pendingTasks`. If you set `completed` back to `false` the task becomes pending again for its assigned user.
 
 7. Queries
 
@@ -138,7 +191,7 @@ Here are some answers to some popular questions from previous years.
 
     http://localhost:4000/api/users/:1?where={"name": "web_prog"}
     
-    if someone is trying to access a specific user by ID, the ID should be the primary filter, and query parameters like where should not be applied. If the where parameter is provided in such a request, you can either ignore it or return an error.
+    if someone is trying to access a specific user by ID, the ID is the only filter, and query parameters other than `select` are ignored (do not return an error for them).
     
     In the follow-up question, you should return the user with ID 1 since the:id filter is primary.
 
@@ -187,11 +240,9 @@ Here are some answers to some popular questions from previous years.
     How to deal with such cases? Should I return the above response or 404 response in case _id is invalid?
     ```
 
-    __Answer__: If a valid _id is used in the query, but there is no user with that _id, then my API is returning 404 error: _This is the expected behavior_.
-    
-    How to deal with such cases? Should I return the above response or 404 response in case _id is invalid?
+    __Answer__: For the `:id` in the URL (`/users/:id`, `/tasks/:id`), respond `404` both when the id is well-formed but nobody has it, and when it is not a valid id at all: from the client's point of view the resource does not exist, and a `500` would be wrong because it is not a server problem. Use a message such as "User not found".
 
-    Since this is an internal server issue and not a client's concern. It's better to return a 404 error in this case as well, indicating that the requested resource (based on the invalid _id) is not found.
+    For ids that appear in the *request body* (`pendingTasks` entries, `assignedUser`) the distinction matters: a malformed id is a `400` (bad request), a well-formed id that does not exist is a `404`. See the status code table in the README.
 
 ### Submission Logistics
 
@@ -204,4 +255,4 @@ Here are some answers to some popular questions from previous years.
 * MongoDB
     > Should we clean up and empty the database before making a submission?
 
-    __Answer__: No, based on the requirements provided, you should not clean up and empty the database before making a submission. Instead, ensure that your MongoDB Atlas database contains at least 20 users and 100 tasks (with about half of them being completed) as specified.
+    __Answer__: No, based on the requirements provided, you should not clean up and empty the database before making a submission. You do not need to populate it with any particular amount of data. Note that the autograder creates (and tries to delete) a few test users and tasks in your database when you run `submit.js`.
