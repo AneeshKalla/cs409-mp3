@@ -22,7 +22,13 @@ after(async () => {
     if (db) await db.stop();
 });
 async function request(method, path, body, status = 200) {
+    if (method === 'DELETE' && status === 200) status = 204;
     const response = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
+    if (status === 204) {
+        assert.equal(response.status, 204);
+        assert.equal(await response.text(), '');
+        return;
+    }
     const result = await response.json();
     assert.equal(response.status, status, JSON.stringify(result));
     assert.equal(typeof result.message, 'string');

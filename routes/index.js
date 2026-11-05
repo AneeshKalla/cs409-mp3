@@ -167,7 +167,7 @@ module.exports = function (app, router) {
                 }
                 await item.deleteOne({ session });
             });
-            res.status(200).json({ message: 'Resource deleted.', data: {} });
+            res.status(204).end();
         });
     }
     app.use('/api', router);
